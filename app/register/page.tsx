@@ -2,7 +2,7 @@
 import Link from "next/link";
 
 export default function RegisterPage() {
- async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
 
@@ -14,6 +14,7 @@ export default function RegisterPage() {
     const birthPlace = formData.get("birthPlace");
     const height = Number(formData.get("height"));
     const weight = Number(formData.get("weight"));
+
     const data = {
       firstName,
       lastName,
@@ -27,6 +28,10 @@ export default function RegisterPage() {
 
     const response = await fetch("/api/register", {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
     });
   }
   return (
@@ -155,6 +160,7 @@ export default function RegisterPage() {
             <div>
               <label
                 htmlFor="height"
+
                 className="mb-2 block text-sm font-semibold text-zinc-700"
               >
                 Altura (m)
@@ -165,6 +171,8 @@ export default function RegisterPage() {
                 name="height"
                 type="number"
                 step="0.01"
+                min="1"
+                max="2.5"
                 placeholder="1.80"
                 className="w-full rounded-xl border border-zinc-300 px-4 py-3 outline-none focus:border-green-800"
               />
