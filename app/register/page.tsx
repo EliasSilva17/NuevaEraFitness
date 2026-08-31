@@ -2,31 +2,45 @@
 
 import Link from "next/link";
 import toast, { Toaster } from "react-hot-toast";
+import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function RegisterPage() {
+  const [showPassword, setShowPassword] = useState(false);
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const formData = new FormData(event.currentTarget);
+    // Guardamos una referencia al formulario
+    const form = event.currentTarget;
+
+    const formData = new FormData(form);
 
     const firstName = formData.get("firstName");
     const lastName = formData.get("lastName");
     const email = formData.get("email");
+    const phone = formData.get("phone");
     const password = formData.get("password");
     const birthDate = formData.get("birthDate");
     const birthPlace = formData.get("birthPlace");
     const height = Number(formData.get("height"));
     const weight = Number(formData.get("weight"));
 
+    const termsAccepted = formData.get("termsAccepted") === "on";
+    const privacyAccepted = formData.get("privacyAccepted") === "on";
+
     const data = {
       firstName,
       lastName,
       email,
+      phone,
       password,
       birthDate,
       birthPlace,
       height,
       weight,
+      termsAccepted,
+      privacyAccepted,
     };
 
     const response = await fetch("/api/register", {
@@ -41,38 +55,44 @@ export default function RegisterPage() {
 
     if (response.ok) {
       toast.success(result.message);
+
+      // Limpiamos el formulario únicamente si el registro salió bien
+      form.reset();
     } else {
       toast.error(result.message);
     }
   }
 
+  const inputClassName =
+    "w-full rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-zinc-900 shadow-sm outline-none transition placeholder:text-zinc-400 hover:border-zinc-300 focus:border-green-700 focus:bg-white focus:ring-4 focus:ring-green-100";
+
   return (
-    <main className="min-h-screen bg-zinc-50 px-6 py-12">
+    <main className="min-h-screen bg-zinc-50 px-4 py-6 sm:px-6 sm:py-10 lg:py-12">
       <Toaster position="bottom-right" reverseOrder={false} />
 
-      <div className="mx-auto w-full max-w-2xl">
+      <div className="mx-auto w-full max-w-3xl">
         <Link
           href="/"
-          className="mb-8 inline-block text-sm font-semibold text-green-800 transition hover:text-green-600"
+          className="mb-5 inline-block text-sm font-semibold text-green-800 transition hover:text-green-600 sm:mb-8"
         >
           ← Volver al inicio
         </Link>
 
-        <div className="rounded-3xl border border-zinc-100 bg-white p-8 shadow-xl shadow-zinc-200/50">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-green-700">
+        <div className="rounded-2xl border border-zinc-100 bg-white p-5 shadow-xl shadow-zinc-200/50 sm:rounded-3xl sm:p-8">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-green-700 sm:text-sm">
             Nueva Era Fitness
           </p>
 
-          <h1 className="mt-3 text-3xl font-bold text-green-950">
+          <h1 className="mt-3 text-2xl font-bold text-green-950 sm:text-3xl">
             Crear cuenta
           </h1>
 
-          <p className="mt-2 text-zinc-500">
+          <p className="mt-2 text-sm text-zinc-500 sm:text-base">
             Completá tus datos para solicitar el acceso.
           </p>
 
           <form
-            className="mt-8 grid gap-5 sm:grid-cols-2"
+            className="mt-7 grid grid-cols-1 gap-5 md:grid-cols-2"
             onSubmit={handleSubmit}
           >
             <div>
@@ -87,11 +107,10 @@ export default function RegisterPage() {
                 id="firstName"
                 name="firstName"
                 type="text"
-                placeholder="Elias"
-                className="w-full rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-zinc-900 shadow-sm outline-none transition placeholder:text-zinc-400 hover:border-zinc-300 focus:border-green-700 focus:bg-white focus:ring-4 focus:ring-green-100"
+                placeholder="Nombre"
+                className={inputClassName}
               />
             </div>
-
             <div>
               <label
                 htmlFor="lastName"
@@ -104,11 +123,10 @@ export default function RegisterPage() {
                 id="lastName"
                 name="lastName"
                 type="text"
-                placeholder="Silva"
-                className="w-full rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-zinc-900 shadow-sm outline-none transition placeholder:text-zinc-400 hover:border-zinc-300 focus:border-green-700 focus:bg-white focus:ring-4 focus:ring-green-100"
+                placeholder="Apellido"
+                className={inputClassName}
               />
             </div>
-
             <div>
               <label
                 htmlFor="email"
@@ -121,11 +139,26 @@ export default function RegisterPage() {
                 id="email"
                 name="email"
                 type="email"
-                placeholder="elias@email.com"
-                className="w-full rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-zinc-900 shadow-sm outline-none transition placeholder:text-zinc-400 hover:border-zinc-300 focus:border-green-700 focus:bg-white focus:ring-4 focus:ring-green-100"
+                placeholder="micorreo@gmail.com"
+                className={inputClassName}
               />
             </div>
+            <div>
+              <label
+                htmlFor="phone"
+                className="mb-2 block text-sm font-medium text-zinc-700"
+              >
+                Celular
+              </label>
 
+              <input
+                id="phone"
+                name="phone"
+                type="tel"
+                placeholder="099 123 456"
+                className={inputClassName}
+              />
+            </div>
             <div>
               <label
                 htmlFor="password"
@@ -134,15 +167,27 @@ export default function RegisterPage() {
                 Contraseña
               </label>
 
-              <input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="••••••••"
-                className="w-full rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-zinc-900 shadow-sm outline-none transition placeholder:text-zinc-400 hover:border-zinc-300 focus:border-green-700 focus:bg-white focus:ring-4 focus:ring-green-100"
-              />
-            </div>
+              <div className="relative">
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
+                  className={`${inputClassName} pr-12`}
+                />
 
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 transition hover:text-green-800"
+                  aria-label={
+                    showPassword ? "Ocultar contraseña" : "Mostrar contraseña"
+                  }
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
+              </div>
+            </div>
             <div>
               <label
                 htmlFor="birthDate"
@@ -155,10 +200,9 @@ export default function RegisterPage() {
                 id="birthDate"
                 name="birthDate"
                 type="date"
-                className="w-full rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-zinc-900 shadow-sm outline-none transition hover:border-zinc-300 focus:border-green-700 focus:bg-white focus:ring-4 focus:ring-green-100"
+                className={inputClassName}
               />
             </div>
-
             <div>
               <label
                 htmlFor="birthPlace"
@@ -172,10 +216,9 @@ export default function RegisterPage() {
                 name="birthPlace"
                 type="text"
                 placeholder="Montevideo"
-                className="w-full rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-zinc-900 shadow-sm outline-none transition placeholder:text-zinc-400 hover:border-zinc-300 focus:border-green-700 focus:bg-white focus:ring-4 focus:ring-green-100"
+                className={inputClassName}
               />
             </div>
-
             <div>
               <label
                 htmlFor="height"
@@ -192,11 +235,10 @@ export default function RegisterPage() {
                 min="1"
                 max="2.5"
                 placeholder="1.80"
-                className="w-full rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-zinc-900 shadow-sm outline-none transition placeholder:text-zinc-400 hover:border-zinc-300 focus:border-green-700 focus:bg-white focus:ring-4 focus:ring-green-100"
+                className={inputClassName}
               />
             </div>
-
-            <div>
+            <div className="md:col-span-2">
               <label
                 htmlFor="weight"
                 className="mb-2 block text-sm font-medium text-zinc-700"
@@ -210,13 +252,62 @@ export default function RegisterPage() {
                 type="number"
                 step="0.1"
                 placeholder="75"
-                className="w-full rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-zinc-900 shadow-sm outline-none transition placeholder:text-zinc-400 hover:border-zinc-300 focus:border-green-700 focus:bg-white focus:ring-4 focus:ring-green-100"
+                className={inputClassName}
               />
             </div>
 
+            <div className="md:col-span-2">
+              <label
+                htmlFor="termsAccepted"
+                className="flex cursor-pointer items-start gap-3 rounded-2xl border border-zinc-200 bg-zinc-50 p-4 transition hover:border-zinc-300"
+              >
+                <input
+                  id="termsAccepted"
+                  name="termsAccepted"
+                  type="checkbox"
+                  className="mt-1 h-4 w-4 rounded border-zinc-300 text-green-800 accent-green-800"
+                />
+
+                <span className="text-sm leading-6 text-zinc-600">
+                  Acepto los{" "}
+                  <Link
+                    href="/terms"
+                    onClick={(event) => event.stopPropagation()}
+                    className="font-semibold text-green-800 transition hover:text-green-600"
+                  >
+                    Términos y Condiciones
+                  </Link>
+                </span>
+              </label>
+            </div>
+
+            <div className="md:col-span-2">
+              <label
+                htmlFor="privacyAccepted"
+                className="flex cursor-pointer items-start gap-3 rounded-2xl border border-zinc-200 bg-zinc-50 p-4 transition hover:border-zinc-300"
+              >
+                <input
+                  id="privacyAccepted"
+                  name="privacyAccepted"
+                  type="checkbox"
+                  className="mt-1 h-4 w-4 rounded border-zinc-300 text-green-800 accent-green-800"
+                />
+
+                <span className="text-sm leading-6 text-zinc-600">
+                  Acepto la{" "}
+                  <Link
+                    href="/privacy"
+                    onClick={(event) => event.stopPropagation()}
+                    className="font-semibold text-green-800 transition hover:text-green-600"
+                  >
+                    Política de Privacidad
+                  </Link>
+                </span>
+              </label>
+            </div>
             <button
               type="submit"
-              className="mt-3 rounded-2xl bg-green-900 px-6 py-3.5 font-semibold text-white shadow-md shadow-green-900/10 transition hover:-translate-y-0.5 hover:bg-green-800 hover:shadow-lg active:translate-y-0 sm:col-span-2"
+              className="mt-2 rounded-2xl bg-green-900 px-6 py-3.5 font-semibold text-white shadow-md shadow-green-900/10 transition hover:-translate-y-0.5 hover:bg-green-800 hover:shadow-lg active:translate-y-0 md:col-span-2"
             >
               Crear cuenta
             </button>

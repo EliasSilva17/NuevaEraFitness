@@ -904,6 +904,27 @@
                   "kind": "scalar"
                 }
               },
+              "phone": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "privacyAcceptedAt": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "privacyVersion": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "role": {
                 "nullable": false,
                 "type": {
@@ -913,6 +934,20 @@
               },
               "status": {
                 "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "termsAcceptedAt": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "kind": "scalar"
+                }
+              },
+              "termsVersion": {
+                "nullable": true,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
@@ -1052,11 +1087,26 @@
                 "password": {
                   "column": "password"
                 },
+                "phone": {
+                  "column": "phone"
+                },
+                "privacyAcceptedAt": {
+                  "column": "privacyAcceptedAt"
+                },
+                "privacyVersion": {
+                  "column": "privacyVersion"
+                },
                 "role": {
                   "column": "role"
                 },
                 "status": {
                   "column": "status"
+                },
+                "termsAcceptedAt": {
+                  "column": "termsAcceptedAt"
+                },
+                "termsVersion": {
+                  "column": "termsVersion"
                 }
               },
               "namespaceId": "public",
@@ -1796,6 +1846,21 @@
                   "nativeType": "text",
                   "nullable": false
                 },
+                "phone": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "privacyAcceptedAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": true
+                },
+                "privacyVersion": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
                 "role": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
@@ -1805,6 +1870,16 @@
                   "codecId": "pg/text@1",
                   "nativeType": "text",
                   "nullable": false
+                },
+                "termsAcceptedAt": {
+                  "codecId": "pg/timestamptz-string@1",
+                  "nativeType": "timestamptz",
+                  "nullable": true
+                },
+                "termsVersion": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
                 }
               },
               "foreignKeys": [],
@@ -1828,7 +1903,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "39d209051e6cdc88e0ea84128de4a72a4130600a42146afdf077c8e6a169d2dd"
+    "storageHash": "0e9bc9334f2a2b72b3f109869aea84f198442b22db3fbc8ae212a804fa9b602d"
   },
   "capabilities": {
     "postgres": {
